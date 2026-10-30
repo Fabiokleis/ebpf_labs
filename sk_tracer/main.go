@@ -16,7 +16,7 @@ import (
 	"github.com/cilium/ebpf/rlimit"
 )
 
-//go:generate go run github.com/cilium/ebpf/cmd/bpf2go -target bpfel bpf tracer.c
+//go:generate go run github.com/cilium/ebpf/cmd/bpf2go -target bpfel -cflags "$BPF_CFLAGS" bpf tracer.c
 
 type bpfEvent struct {
 	Pid  uint32
