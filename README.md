@@ -16,6 +16,15 @@ SEC("tracepoint/syscalls/sys_enter_read")
 SEC("tracepoint/syscalls/sys_exit_read")
 ```
 
+## runtime_cbom
+
+golang ebpf `sys_enter_write` collector for runtime Cryptographic Bill of Materials (CycloneDX 1.7) generation across TLS 1.2 and TLS 1.3 handshakes
+```c
+SEC("tracepoint/syscalls/sys_enter_write")
+```
+### Scenario
+[./runtime_cbom/SCENARIO.md](openssl server & client)
+
 ## NixOS Setup
 in root directory start a clean environment by running:
 ```shell

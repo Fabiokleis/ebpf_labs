@@ -7,6 +7,8 @@ pkgs.mkShell {
     llvmPackages.llvm
     libbpf
     linuxHeaders
+    bpftools
+    openssl
   ];
 
   shellHook = ''

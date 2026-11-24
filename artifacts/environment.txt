@@ -1,0 +1,6 @@
+Kernel: 6.18.52
+OpenSSL: OpenSSL 3.6.5 29 Sep 2026 (Library: OpenSSL 3.6.5 29 Sep 2026)
+Go: go version go1.26.10 linux/amd64
+Clang: clang version 21.1.8
+CPU: Model name: AMD Ryzen 5 5600G with Radeon Graphics
+Mem: 15Gi
