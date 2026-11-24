@@ -85,17 +85,21 @@ func main() {
 		if capLen > maxPayload {
 			capLen = maxPayload
 		}
+
 		payload := event.Payload[:capLen]
 
-		var recType, hsType byte
-		if len(payload) >= 1 {
-			recType = payload[0]
-		}
-		if len(payload) >= 6 {
-			hsType = payload[5]
+		// Ignore client messages (0x01, 0x10) and NewSessionTicket (0x04)
+		if len(payload) < 6 || payload[5] != 0x02 {
+			continue
 		}
 
-		log.Printf("[EVENT] PID: %-6d | FD: %-4d | COMM: %-8s | ORIG: %-5d | CAP: %-4d | REC: 0x%02X | HS: 0x%02X",
-			event.Pid, event.Fd, comm, event.OrigLen, capLen, recType, hsType)
+		hs, err := ParseHandshake(payload)
+		if err != nil {
+			log.Printf("[WARN] PID: %-6d | FD: %-4d | COMM: %s | %s", event.Pid, event.Fd, comm, err)
+			continue
+		}
+
+		log.Printf("[EVENT] PID: %-6d | FD: %-4d | TLS: %s | CIPHER: %s (0x%04X) | GROUP: %s (0x%04X) [%s]",
+			event.Pid, event.Fd, hs.TLSVersion, hs.CipherName, hs.CipherID, hs.GroupName, hs.GroupID, hs.GroupStatus)
 	}
 }

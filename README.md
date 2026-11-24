@@ -23,7 +23,7 @@ golang ebpf `sys_enter_write` collector for runtime Cryptographic Bill of Materi
 SEC("tracepoint/syscalls/sys_enter_write")
 ```
 ### Scenario
-[./runtime_cbom/SCENARIO.md](openssl server & client)
+(./runtime_cbom/SCENARIO.md)[openssl server & client]
 
 ## NixOS Setup
 in root directory start a clean environment by running:
