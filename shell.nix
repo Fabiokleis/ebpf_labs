@@ -3,6 +3,7 @@
 pkgs.mkShell {
   buildInputs = with pkgs; [
     go
+    check-jsonschema
     llvmPackages.clang-unwrapped
     llvmPackages.llvm
     libbpf

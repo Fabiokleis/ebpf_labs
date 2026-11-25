@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"errors"
+	"flag"
 	"log/slog"
 	"os"
 	"os/signal"
@@ -42,6 +43,10 @@ type activeFlight struct {
 }
 
 func main() {
+
+	outDir := flag.String("out", "../artifacts/cbom", "output directory for CycloneDX 1.7 CBOM files")
+	flag.Parse()
+
 	if err := rlimit.RemoveMemlock(); err != nil {
 		slog.Error("failed removing memlock", "err", err)
 		os.Exit(1)
@@ -89,7 +94,7 @@ func main() {
 			for k, f := range flights {
 				if now.Sub(f.LastSeen) > 300*time.Millisecond {
 					f.Info.CloseReason = "timeout"
-					logFlight(f.Info)
+					logFlight(f.Info, *outDir)
 					delete(flights, k)
 				}
 			}
@@ -145,14 +150,19 @@ func main() {
 
 		ParseRecords(payload, f.Info, event.OrigLen)
 		if f.Info.Complete {
-			logFlight(f.Info)
+			logFlight(f.Info, *outDir)
 			delete(flights, key)
 		}
 		mu.Unlock()
 	}
 }
 
-func logFlight(hs *HandshakeInfo) {
+func logFlight(hs *HandshakeInfo, outDir string) {
+	outPath, err := WriteCBOM(outDir, hs)
+	if err != nil {
+		slog.Error("failed writing CBOM", "pid", hs.Pid, "fd", hs.Fd, "err", err)
+	}
+
 	slog.Info("flight completed",
 		"pid", hs.Pid,
 		"fd", hs.Fd,
@@ -168,5 +178,6 @@ func logFlight(hs *HandshakeInfo) {
 		"cert", hs.CertSubject,
 		"cert_status", hs.CertStatus,
 		"truncated", hs.Truncated,
+		"cbom", outPath,
 	)
 }

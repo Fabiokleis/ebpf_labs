@@ -2,6 +2,22 @@
 
 ebpf labs in golang + c
 
+## NixOS Setup
+in root directory start a clean environment by running:
+```shell
+nix-shell
+```
+
+## Build
+```shell
+go generate
+```
+
+## Running
+```shell
+sudo -E go run .
+```
+
 ## sk_tracer
 golang ebpf `sys_enter_connect` monitoring script
 ```c
@@ -22,6 +38,9 @@ golang ebpf `sys_enter_write` collector for runtime Cryptographic Bill of Materi
 ```c
 SEC("tracepoint/syscalls/sys_enter_write")
 ```
+### Scenario
+[openssl server & client](./runtime_cbom/SCENARIO.md)
+
 ### Runtime Capture Pipeline
 
 > **Note:** This document describes how `runtime_cbom` captures, correlates, and parses TLS handshakes from kernel `write(2)` syscalls to structured observations.
@@ -49,21 +68,20 @@ SEC("tracepoint/syscalls/sys_enter_write")
        - write #2 (~314 B): ServerKeyExchange (0x0C) + ServerHelloDone (0x0E).
 ```
 
-### Scenario
-[openssl server & client](./runtime_cbom/SCENARIO.md)
+### Runtime CBOM Collector (`runtime_cbom`)
 
-## NixOS Setup
-in root directory start a clean environment by running:
+> **Note:** Build and run the collector from `runtime_cbom/`. By default, generated CycloneDX 1.7 JSON files are written to `artifacts/cbom/` at the repository root.
+
+### CycloneDX json
+
+Check json generated CBOM inventory JSON by using official 1.7 schema: 
 ```shell
-nix-shell
+	check-jsonschema --schemafile https://raw.githubusercontent.com/CycloneDX/specification/master/schema/bom-1.7.schema.json artifacts/cbom/cbom_*
 ```
 
-## Build
-```shell
-go generate
-```
+### Running
 
-## Running
 ```shell
-sudo -E go run .
+cd runtime_cbom
+sudo -E CGO_ENABLED=0 go run . -out ../artifacts/cbom
 ```

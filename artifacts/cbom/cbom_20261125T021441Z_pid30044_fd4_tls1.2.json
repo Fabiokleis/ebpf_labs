@@ -1,0 +1,168 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.7",
+  "serialNumber": "urn:uuid:b06933de-8241-4453-b035-fbf23e970521",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-11-25T02:14:41Z",
+    "component": {
+      "type": "application",
+      "name": "openssl"
+    }
+  },
+  "components": [
+    {
+      "bom-ref": "tls-1.2-pid30044-fd4",
+      "type": "cryptographic-asset",
+      "name": "TLS",
+      "version": "1.2",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "tls",
+          "version": "1.2",
+          "cipherSuites": [
+            {
+              "name": "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+              "algorithms": [
+                "alg-aes-256-gcm",
+                "alg-sha-384"
+              ],
+              "identifiers": [
+                "0xC030"
+              ]
+            }
+          ],
+          "cryptoRefArray": [
+            "alg-aes-256-gcm",
+            "alg-sha-384",
+            "kex-x25519",
+            "sig-rsa_pss_rsae_sha256"
+          ]
+        }
+      },
+      "properties": [
+        {
+          "name": "cbom:status:version",
+          "value": "R"
+        },
+        {
+          "name": "cbom:status:cipher",
+          "value": "R"
+        },
+        {
+          "name": "cbom:status:group",
+          "value": "R"
+        },
+        {
+          "name": "cbom:status:signature",
+          "value": "R"
+        },
+        {
+          "name": "cbom:status:certificate",
+          "value": "NR: implementação"
+        },
+        {
+          "name": "cbom:evidence:pid",
+          "value": "30044"
+        },
+        {
+          "name": "cbom:evidence:fd",
+          "value": "4"
+        },
+        {
+          "name": "cbom:evidence:writes",
+          "value": "2"
+        },
+        {
+          "name": "cbom:evidence:closed_by",
+          "value": "ServerHelloDone"
+        },
+        {
+          "name": "cbom:evidence:truncated",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "bom-ref": "alg-aes-256-gcm",
+      "type": "cryptographic-asset",
+      "name": "AES-256-GCM",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "ae",
+          "parameterSetIdentifier": "256",
+          "mode": "gcm"
+        }
+      },
+      "properties": [
+        {
+          "name": "cbom:observability",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "bom-ref": "alg-sha-384",
+      "type": "cryptographic-asset",
+      "name": "SHA-384",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "hash",
+          "parameterSetIdentifier": "384"
+        }
+      },
+      "properties": [
+        {
+          "name": "cbom:observability",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "bom-ref": "kex-x25519",
+      "type": "cryptographic-asset",
+      "name": "x25519",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "key-agree",
+          "curve": "other/Curve25519"
+        }
+      },
+      "properties": [
+        {
+          "name": "cbom:observability",
+          "value": "R"
+        },
+        {
+          "name": "cbom:iana-group-id",
+          "value": "0x001D"
+        }
+      ]
+    },
+    {
+      "bom-ref": "sig-rsa_pss_rsae_sha256",
+      "type": "cryptographic-asset",
+      "name": "rsa_pss_rsae_sha256",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "signature"
+        }
+      },
+      "properties": [
+        {
+          "name": "cbom:observability",
+          "value": "R"
+        },
+        {
+          "name": "cbom:iana-sig-id",
+          "value": "0x0804"
+        }
+      ]
+    }
+  ]
+}
