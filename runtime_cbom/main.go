@@ -4,10 +4,12 @@ import (
 	"bytes"
 	"encoding/binary"
 	"errors"
-	"log"
+	"log/slog"
 	"os"
 	"os/signal"
+	"sync"
 	"syscall"
+	"time"
 
 	_ "embed"
 
@@ -29,28 +31,42 @@ type bpfEvent struct {
 	Payload     [maxPayload]byte
 }
 
+type connKey struct {
+	Pid uint32
+	Fd  uint32
+}
+
+type activeFlight struct {
+	Info     *HandshakeInfo
+	LastSeen time.Time
+}
+
 func main() {
 	if err := rlimit.RemoveMemlock(); err != nil {
-		log.Fatalf("failed removing memlock: %s", err)
+		slog.Error("failed removing memlock", "err", err)
+		os.Exit(1)
 	}
 
 	objs := bpfObjects{}
 	if err := loadBpfObjects(&objs, nil); err != nil {
-		log.Fatalf("failed loading object BPF: %s", err)
+		slog.Error("failed loading BPF objects", "err", err)
+		os.Exit(1)
 	}
 	defer objs.Close()
 
 	tpEnter, err := link.Tracepoint("syscalls", "sys_enter_write", objs.HandleEnterWrite, nil)
 	if err != nil {
-		log.Fatalf("failed attach tracepoint: %s", err)
+		slog.Error("failed attaching tracepoint", "err", err)
+		os.Exit(1)
 	}
 	defer tpEnter.Close()
 
-	log.Println("tracing ....")
+	slog.Info("tracing started", "tracepoint", "syscalls/sys_enter_write")
 
 	rd, err := ringbuf.NewReader(objs.Events)
 	if err != nil {
-		log.Fatalf("failed creating reader ringbuf: %s", err)
+		slog.Error("failed creating ringbuf reader", "err", err)
+		os.Exit(1)
 	}
 	defer rd.Close()
 
@@ -61,45 +77,96 @@ func main() {
 		rd.Close()
 	}()
 
-	// Ring Buffer consuming loop
+	var mu sync.Mutex
+	flights := make(map[connKey]*activeFlight)
+
+	go func() {
+		ticker := time.NewTicker(150 * time.Millisecond)
+		defer ticker.Stop()
+		for range ticker.C {
+			mu.Lock()
+			now := time.Now()
+			for k, f := range flights {
+				if now.Sub(f.LastSeen) > 300*time.Millisecond {
+					f.Info.CloseReason = "timeout"
+					logFlight(f.Info)
+					delete(flights, k)
+				}
+			}
+			mu.Unlock()
+		}
+	}()
+
 	var event bpfEvent
 	for {
 		record, err := rd.Read()
 		if err != nil {
 			if errors.Is(err, ringbuf.ErrClosed) {
-				log.Println("ringbuf closed")
+				slog.Info("ringbuf closed")
 				return
 			}
-			log.Printf("failed reading ringbuf: %s", err)
+			slog.Error("failed reading ringbuf", "err", err)
 			continue
 		}
 
 		if err := binary.Read(bytes.NewReader(record.RawSample), binary.LittleEndian, &event); err != nil {
-			log.Printf("failed to decode event structure: %s", err)
+			slog.Error("failed decoding event", "err", err)
 			continue
 		}
 
 		comm := string(bytes.Trim(event.Comm[:], "\x00"))
-
-		capLen := event.CapturedLen
-		if capLen > maxPayload {
-			capLen = maxPayload
-		}
-
+		capLen := min(event.CapturedLen, maxPayload)
 		payload := event.Payload[:capLen]
 
-		// Ignore client messages (0x01, 0x10) and NewSessionTicket (0x04)
-		if len(payload) < 6 || payload[5] != 0x02 {
+		if len(payload) < 6 {
 			continue
 		}
 
-		hs, err := ParseHandshake(payload)
-		if err != nil {
-			log.Printf("[WARN] PID: %-6d | FD: %-4d | COMM: %s | %s", event.Pid, event.Fd, comm, err)
-			continue
+		key := connKey{Pid: event.Pid, Fd: event.Fd}
+		mu.Lock()
+		f, exists := flights[key]
+		if !exists {
+			if payload[5] != hsServerHello {
+				mu.Unlock()
+				continue
+			}
+			f = &activeFlight{
+				Info: NewHandshakeInfo(event.Pid, event.Fd, comm),
+			}
+			flights[key] = f
 		}
 
-		log.Printf("[EVENT] PID: %-6d | FD: %-4d | TLS: %s | CIPHER: %s (0x%04X) | GROUP: %s (0x%04X) [%s]",
-			event.Pid, event.Fd, hs.TLSVersion, hs.CipherName, hs.CipherID, hs.GroupName, hs.GroupID, hs.GroupStatus)
+		f.Info.OrigLen += event.OrigLen
+		f.Info.CapLen += capLen
+		if event.OrigLen > capLen {
+			f.Info.Truncated = true
+		}
+		f.LastSeen = time.Now()
+
+		ParseRecords(payload, f.Info, event.OrigLen)
+		if f.Info.Complete {
+			logFlight(f.Info)
+			delete(flights, key)
+		}
+		mu.Unlock()
 	}
+}
+
+func logFlight(hs *HandshakeInfo) {
+	slog.Info("flight completed",
+		"pid", hs.Pid,
+		"fd", hs.Fd,
+		"comm", hs.Comm,
+		"writes", hs.WriteCount,
+		"closed_by", hs.CloseReason,
+		"tls", hs.TLSVersion,
+		"cipher", hs.CipherName,
+		"group", hs.GroupName,
+		"group_status", hs.GroupStatus,
+		"sig", hs.SigSchemeName,
+		"sig_status", hs.SigSchemeStatus,
+		"cert", hs.CertSubject,
+		"cert_status", hs.CertStatus,
+		"truncated", hs.Truncated,
+	)
 }
