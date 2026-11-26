@@ -1,0 +1,568 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:4de2f530-6a65-432a-9d4c-57edc5d5f7f0",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-11-26T02:18:32-03:00",
+    "tools": {
+      "services": [
+        {
+          "provider": {
+            "name": "PQCA"
+          },
+          "name": "cbomkit-theia",
+          "version": "v1.1.2",
+          "services": [
+            {
+              "name": "Secret Detection Plugin"
+            },
+            {
+              "name": "OpenSSL Config Plugin"
+            },
+            {
+              "name": "Certificate File Plugin"
+            },
+            {
+              "name": "Problematic CA Detection Plugin"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "components": [
+    {
+      "bom-ref": "1c11bb73-9955-4e22-a649-b240b82f8456",
+      "type": "cryptographic-asset",
+      "name": "RSA-2048",
+      "description": "Identified a Private Key, which may compromise cryptographic security and sensitive data encryption.",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "key.pem",
+            "line": 0
+          }
+        ]
+      },
+      "cryptoProperties": {
+        "assetType": "related-crypto-material",
+        "relatedCryptoMaterialProperties": {
+          "type": "private-key",
+          "size": 2048,
+          "format": "PEM"
+        },
+        "oid": "1.2.840.113549.1.1.1"
+      }
+    },
+    {
+      "bom-ref": "36050df6-1fad-428f-b476-cc459f9d226f",
+      "type": "cryptographic-asset",
+      "name": "RSA-2048",
+      "description": "Identified a Private Key, which may compromise cryptographic security and sensitive data encryption.",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "key_large.pem",
+            "line": 0
+          }
+        ]
+      },
+      "cryptoProperties": {
+        "assetType": "related-crypto-material",
+        "relatedCryptoMaterialProperties": {
+          "type": "private-key",
+          "size": 2048,
+          "format": "PEM"
+        },
+        "oid": "1.2.840.113549.1.1.1"
+      }
+    },
+    {
+      "bom-ref": "1570ea40-3c94-4d94-946c-6ad21c301495",
+      "type": "cryptographic-asset",
+      "name": "SHA384",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "openssl.cnf"
+          }
+        ]
+      },
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "hash",
+          "parameterSetIdentifier": "384"
+        }
+      }
+    },
+    {
+      "bom-ref": "56688087-8733-4214-958e-dce24f0872a3",
+      "type": "cryptographic-asset",
+      "name": "AES256 GCM",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "openssl.cnf"
+          }
+        ]
+      },
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "block-cipher",
+          "mode": "gcm"
+        }
+      }
+    },
+    {
+      "bom-ref": "5a6336a3-ea66-460b-b69d-d937e0760955",
+      "type": "file",
+      "name": "openssl.cnf",
+      "description": "OpenSSL configuration",
+      "properties": [
+        {
+          "name": "theia:openssl:MinProtocol",
+          "value": "TLSv1.2"
+        },
+        {
+          "name": "theia:openssl:MaxProtocol",
+          "value": "TLSv1.3"
+        },
+        {
+          "name": "theia:openssl:CipherString",
+          "value": "ECDHE-RSA-AES256-GCM-SHA384"
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "openssl.cnf"
+          }
+        ]
+      }
+    },
+    {
+      "bom-ref": "bdd23864-db2e-4512-b876-d9465f3c7f3d",
+      "type": "cryptographic-asset",
+      "name": "AES256 GCM",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "openssl.cnf"
+          }
+        ]
+      },
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "block-cipher",
+          "mode": "gcm"
+        }
+      }
+    },
+    {
+      "bom-ref": "cfeea64b-0597-47c6-869e-9f7f34123a9b",
+      "type": "cryptographic-asset",
+      "name": "SHA384",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "openssl.cnf"
+          }
+        ]
+      },
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "hash",
+          "parameterSetIdentifier": "384"
+        }
+      }
+    },
+    {
+      "bom-ref": "d92f7551-4d6c-4dc2-8c05-6ce12b78491f",
+      "type": "cryptographic-asset",
+      "name": "TLSv1.2",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "openssl.cnf"
+          }
+        ]
+      },
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "tls",
+          "version": "1.2",
+          "cipherSuites": [
+            {
+              "name": "TLS_AES_256_GCM_SHA384",
+              "algorithms": [
+                "bdd23864-db2e-4512-b876-d9465f3c7f3d",
+                "1570ea40-3c94-4d94-946c-6ad21c301495"
+              ],
+              "identifiers": [
+                "0x13",
+                "0x02"
+              ]
+            }
+          ],
+          "cryptoRefArray": [
+            "bdd23864-db2e-4512-b876-d9465f3c7f3d",
+            "1570ea40-3c94-4d94-946c-6ad21c301495"
+          ]
+        }
+      }
+    },
+    {
+      "bom-ref": "f4653ab0-e7b7-45c9-b234-5cae3dbbe1e6",
+      "type": "cryptographic-asset",
+      "name": "TLSv1.3",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "openssl.cnf"
+          }
+        ]
+      },
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "protocolProperties": {
+          "type": "tls",
+          "version": "1.3",
+          "cipherSuites": [
+            {
+              "name": "TLS_AES_256_GCM_SHA384",
+              "algorithms": [
+                "56688087-8733-4214-958e-dce24f0872a3",
+                "cfeea64b-0597-47c6-869e-9f7f34123a9b"
+              ],
+              "identifiers": [
+                "0x13",
+                "0x02"
+              ]
+            }
+          ],
+          "cryptoRefArray": [
+            "56688087-8733-4214-958e-dce24f0872a3",
+            "cfeea64b-0597-47c6-869e-9f7f34123a9b"
+          ]
+        }
+      }
+    },
+    {
+      "bom-ref": "a68ddb62-417a-4e73-8dda-dd85431f19d1",
+      "type": "cryptographic-asset",
+      "name": "RSA",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "cert_large.pem"
+          }
+        ]
+      },
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "signature",
+          "cryptoFunctions": [
+            "sign"
+          ]
+        },
+        "oid": "1.2.840.113549.1.1.1"
+      }
+    },
+    {
+      "bom-ref": "dd84b644-2f15-4b08-a21b-1608d96b0367",
+      "type": "cryptographic-asset",
+      "name": "SHA256",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "cert_large.pem"
+          }
+        ]
+      },
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "hash",
+          "parameterSetIdentifier": "256",
+          "cryptoFunctions": [
+            "digest"
+          ]
+        }
+      }
+    },
+    {
+      "bom-ref": "d81c8000-f148-4789-99e3-25e12ee4eba8",
+      "type": "cryptographic-asset",
+      "name": "SHA256-RSA",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "cert_large.pem"
+          }
+        ]
+      },
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "signature",
+          "parameterSetIdentifier": "256",
+          "padding": "pkcs1v15",
+          "cryptoFunctions": [
+            "sign"
+          ]
+        },
+        "oid": "1.2.840.113549.1.1.11"
+      }
+    },
+    {
+      "bom-ref": "215a5d11-c72c-4867-8397-e934f0c01068",
+      "type": "cryptographic-asset",
+      "name": "RSA",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "cert_large.pem"
+          }
+        ]
+      },
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "pke",
+          "cryptoFunctions": [
+            "encapsulate",
+            "decapsulate",
+            "sign"
+          ]
+        },
+        "oid": "1.2.840.113549.1.1.1"
+      }
+    },
+    {
+      "bom-ref": "6e62960a-bc96-48f0-a38f-dbdc6e947be7",
+      "type": "cryptographic-asset",
+      "name": "RSA-2048",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "cert_large.pem"
+          }
+        ]
+      },
+      "cryptoProperties": {
+        "assetType": "related-crypto-material",
+        "relatedCryptoMaterialProperties": {
+          "type": "public-key",
+          "algorithmRef": "215a5d11-c72c-4867-8397-e934f0c01068",
+          "value": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnbE9YBF1OF07BSTdohO/Z/U3XD6vkd+BxFr5xRGIsUuFNu7kRpGTGkCtdauG1DpSbxdhrIUeS3R0GC94Jw+Ojf4jW/rtQwvYeZqVc0wEP0HPTALmGpvfyQqyFzduSBocaWb0G6qkf/IFdmALiUoIxU9alevWO2+tDhv7+EKp2p1kgXpmu7NGcY7mpSe67Q9NqRsw37+U1x7cs2ZqI+dALbhGM6QsC0f7lVAYqy+JEiIBmoxLH7QIxQt96D9q2c3uZdYgpwz4xexxSbjFicRrhlKz41VXK/2NX3HPdb4yH7tGFincLwg568ew+nblyOfTfXqw3KJcGXRAZT9ZBhviVwIDAQAB",
+          "size": 2048,
+          "format": "PEM"
+        },
+        "oid": "1.2.840.113549.1.1.1"
+      }
+    },
+    {
+      "bom-ref": "4c97cb9e-e3a7-4bd9-9a91-05822154a97e",
+      "type": "cryptographic-asset",
+      "name": "localhost",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "cert_large.pem"
+          }
+        ]
+      },
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "subjectName": "localhost",
+          "issuerName": "localhost",
+          "notValidBefore": "2026-11-24T00:05:04Z",
+          "notValidAfter": "2027-11-24T00:05:04Z",
+          "signatureAlgorithmRef": "d81c8000-f148-4789-99e3-25e12ee4eba8",
+          "subjectPublicKeyRef": "6e62960a-bc96-48f0-a38f-dbdc6e947be7",
+          "certificateFormat": "X.509",
+          "certificateExtension": "pem"
+        }
+      }
+    },
+    {
+      "bom-ref": "031dbc68-6060-4f38-8876-f73f2a2e4002",
+      "type": "cryptographic-asset",
+      "name": "RSA",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "cert_small.pem"
+          }
+        ]
+      },
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "signature",
+          "cryptoFunctions": [
+            "sign"
+          ]
+        },
+        "oid": "1.2.840.113549.1.1.1"
+      }
+    },
+    {
+      "bom-ref": "f71ad051-d238-4611-8055-9e4e23ac0e0b",
+      "type": "cryptographic-asset",
+      "name": "SHA256",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "cert_small.pem"
+          }
+        ]
+      },
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "hash",
+          "parameterSetIdentifier": "256",
+          "cryptoFunctions": [
+            "digest"
+          ]
+        }
+      }
+    },
+    {
+      "bom-ref": "73a10451-424b-447d-989d-5a3d7aeaa122",
+      "type": "cryptographic-asset",
+      "name": "SHA256-RSA",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "cert_small.pem"
+          }
+        ]
+      },
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "signature",
+          "parameterSetIdentifier": "256",
+          "padding": "pkcs1v15",
+          "cryptoFunctions": [
+            "sign"
+          ]
+        },
+        "oid": "1.2.840.113549.1.1.11"
+      }
+    },
+    {
+      "bom-ref": "62a24855-dc54-4cec-a440-e549d0354f2f",
+      "type": "cryptographic-asset",
+      "name": "RSA",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "cert_small.pem"
+          }
+        ]
+      },
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "pke",
+          "cryptoFunctions": [
+            "encapsulate",
+            "decapsulate",
+            "sign"
+          ]
+        },
+        "oid": "1.2.840.113549.1.1.1"
+      }
+    },
+    {
+      "bom-ref": "2e70f1eb-229d-4448-9134-6f71b639dede",
+      "type": "cryptographic-asset",
+      "name": "RSA-2048",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "cert_small.pem"
+          }
+        ]
+      },
+      "cryptoProperties": {
+        "assetType": "related-crypto-material",
+        "relatedCryptoMaterialProperties": {
+          "type": "public-key",
+          "algorithmRef": "62a24855-dc54-4cec-a440-e549d0354f2f",
+          "value": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAn7t1ZFGEMEqbV3kTRVXlHhVHHLHsXtxnlpj6AegtTlB+eMGbbZb0dGHcb3tw2nC4/Ux1Oa2CJdP5kcdN0SOM8C+NJtaacXne49MawmnPtsWgtOYHpX6Fe5+mP73OKX3lJaTF9wllI1yyU2K4mTC44esGJ6RDofESganaYPlb/mgQ51aqeGDfn4atcTY0gu9Zr7XJTEVaW9ra7qdB4jnfuKqZ8NUS9CyolbPzYHqTL2z/DHbOYFecVwNycc1b+jodZprWl+MuFjAPAxwgbvrLUyESujRjE2VhvmkTLNYNKnek+JQbcS/jbULjflyPclLyajZLfGJGcK5Q/sXkq9MOnwIDAQAB",
+          "size": 2048,
+          "format": "PEM"
+        },
+        "oid": "1.2.840.113549.1.1.1"
+      }
+    },
+    {
+      "bom-ref": "17cf3967-0a64-49db-90a7-992254460f6a",
+      "type": "cryptographic-asset",
+      "name": "localhost",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "cert_small.pem"
+          }
+        ]
+      },
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "subjectName": "localhost",
+          "issuerName": "localhost",
+          "notValidBefore": "2026-11-24T00:03:39Z",
+          "notValidAfter": "2027-11-24T00:03:39Z",
+          "signatureAlgorithmRef": "73a10451-424b-447d-989d-5a3d7aeaa122",
+          "subjectPublicKeyRef": "2e70f1eb-229d-4448-9134-6f71b639dede",
+          "certificateFormat": "X.509",
+          "certificateExtension": "pem"
+        }
+      }
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "d92f7551-4d6c-4dc2-8c05-6ce12b78491f",
+      "dependsOn": [
+        "bdd23864-db2e-4512-b876-d9465f3c7f3d",
+        "1570ea40-3c94-4d94-946c-6ad21c301495"
+      ]
+    },
+    {
+      "ref": "f4653ab0-e7b7-45c9-b234-5cae3dbbe1e6",
+      "dependsOn": [
+        "56688087-8733-4214-958e-dce24f0872a3",
+        "cfeea64b-0597-47c6-869e-9f7f34123a9b"
+      ]
+    },
+    {
+      "ref": "d81c8000-f148-4789-99e3-25e12ee4eba8",
+      "dependsOn": [
+        "a68ddb62-417a-4e73-8dda-dd85431f19d1",
+        "dd84b644-2f15-4b08-a21b-1608d96b0367"
+      ]
+    },
+    {
+      "ref": "73a10451-424b-447d-989d-5a3d7aeaa122",
+      "dependsOn": [
+        "031dbc68-6060-4f38-8876-f73f2a2e4002",
+        "f71ad051-d238-4611-8055-9e4e23ac0e0b"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+# OpenSSL configuration used by the s_server scenario.
+# Mirrors the s_server command-line flags so that a static scanner
+# (CBOMkit-theia, opensslconf plugin) sees the same TLS configuration
+# that the server actually loads (via OPENSSL_CONF).
+#   -cipher       ECDHE-RSA-AES256-GCM-SHA384   -> CipherString (TLS 1.2)
+#   -ciphersuites TLS_AES_256_GCM_SHA384        -> Ciphersuites (TLS 1.3)
+openssl_conf = openssl_init
+
+[openssl_init]
+ssl_conf = ssl_sect
+
+[ssl_sect]
+system_default = system_default_sect
+
+[system_default_sect]
+MinProtocol = TLSv1.2
+MaxProtocol = TLSv1.3
+CipherString = ECDHE-RSA-AES256-GCM-SHA384
+Ciphersuites = TLS_AES_256_GCM_SHA384
