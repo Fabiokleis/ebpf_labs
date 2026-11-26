@@ -50,10 +50,29 @@ type CryptoProperties struct {
 }
 
 type ProtocolProperties struct {
-	Type           string        `json:"type"`
-	Version        string        `json:"version"`
-	CipherSuites   []CipherSuite `json:"cipherSuites,omitempty"`
-	CryptoRefArray []string      `json:"cryptoRefArray,omitempty"`
+	Type         string        `json:"type"`
+	Version      string        `json:"version"`
+	CipherSuites []CipherSuite `json:"cipherSuites,omitempty"`
+	// relatedCryptographicAssets replaces the deprecated cryptoRefArray (CycloneDX 1.7).
+	RelatedCryptographicAssets []RelatedCryptographicAsset `json:"relatedCryptographicAssets,omitempty"`
+}
+
+type RelatedCryptographicAsset struct {
+	Type string `json:"type,omitempty"`
+	Ref  string `json:"ref"`
+}
+
+// relatedAssets converts bom-refs into relatedCryptographicAssets entries.
+func relatedAssets(refs []string) []RelatedCryptographicAsset {
+	out := make([]RelatedCryptographicAsset, 0, len(refs))
+	for _, r := range refs {
+		t := "algorithm"
+		if strings.HasPrefix(r, "cert-") {
+			t = "certificate"
+		}
+		out = append(out, RelatedCryptographicAsset{Type: t, Ref: r})
+	}
+	return out
 }
 
 type CipherSuite struct {
@@ -65,18 +84,20 @@ type CipherSuite struct {
 type AlgorithmProperties struct {
 	Primitive              string `json:"primitive"`
 	ParameterSetIdentifier string `json:"parameterSetIdentifier,omitempty"`
-	Curve                  string `json:"curve,omitempty"`
+	EllipticCurve          string `json:"ellipticCurve,omitempty"` // "curve" is deprecated in CycloneDX 1.7
 	Mode                   string `json:"mode,omitempty"`
 }
 
 type CertificateProperties struct {
-	SubjectName          string `json:"subjectName,omitempty"`
-	IssuerName           string `json:"issuerName,omitempty"`
-	NotValidBefore       string `json:"notValidBefore,omitempty"`
-	NotValidAfter        string `json:"notValidAfter,omitempty"`
-	SubjectPublicKeyRef  string `json:"subjectPublicKeyRef,omitempty"`
-	CertificateFormat    string `json:"certificateFormat,omitempty"`
-	CertificateExtension string `json:"certificateExtension,omitempty"`
+	SubjectName       string `json:"subjectName,omitempty"`
+	IssuerName        string `json:"issuerName,omitempty"`
+	NotValidBefore    string `json:"notValidBefore,omitempty"`
+	NotValidAfter     string `json:"notValidAfter,omitempty"`
+	CertificateFormat string `json:"certificateFormat,omitempty"`
+	// certificateFileExtension replaces the deprecated certificateExtension, and
+	// relatedCryptographicAssets replaces the deprecated subjectPublicKeyRef.
+	CertificateFileExtension   string                      `json:"certificateFileExtension,omitempty"`
+	RelatedCryptographicAssets []RelatedCryptographicAsset `json:"relatedCryptographicAssets,omitempty"`
 }
 
 type RelatedCryptoMaterial struct {
@@ -152,8 +173,8 @@ func BuildCBOM(hs *HandshakeInfo) CBOM {
 
 		primitive := "key-agree"
 		algProps := &AlgorithmProperties{
-			Primitive: primitive,
-			Curve:     hs.EllipticCurve,
+			Primitive:     primitive,
+			EllipticCurve: hs.EllipticCurve,
 		}
 		if hs.GroupFamily == "ML-KEM" {
 			primitive = "kem"
@@ -227,13 +248,15 @@ func BuildCBOM(hs *HandshakeInfo) CBOM {
 				CryptoProperties: &CryptoProperties{
 					AssetType: "certificate",
 					CertificateProperties: &CertificateProperties{
-						SubjectName:          hs.CertSubject,
-						IssuerName:           hs.CertIssuer,
-						NotValidBefore:       hs.CertNotBefore,
-						NotValidAfter:        hs.CertNotAfter,
-						SubjectPublicKeyRef:  pubKeyRef,
-						CertificateFormat:    "X.509",
-						CertificateExtension: "der",
+						SubjectName:              hs.CertSubject,
+						IssuerName:               hs.CertIssuer,
+						NotValidBefore:           hs.CertNotBefore,
+						NotValidAfter:            hs.CertNotAfter,
+						CertificateFormat:        "X.509",
+						CertificateFileExtension: "der",
+						RelatedCryptographicAssets: []RelatedCryptographicAsset{
+							{Type: "publicKey", Ref: pubKeyRef},
+						},
 					},
 				},
 				Properties: []Property{
@@ -262,7 +285,7 @@ func BuildCBOM(hs *HandshakeInfo) CBOM {
 						Identifiers: []string{fmt.Sprintf("0x%04X", hs.CipherID)},
 					},
 				},
-				CryptoRefArray: protoRefs,
+				RelatedCryptographicAssets: relatedAssets(protoRefs),
 			},
 		},
 		Properties: []Property{

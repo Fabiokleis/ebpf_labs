@@ -76,7 +76,7 @@ SEC("tracepoint/syscalls/sys_enter_write")
 
 Check json generated CBOM inventory JSON by using official 1.7 schema: 
 ```shell
-	check-jsonschema --schemafile https://raw.githubusercontent.com/CycloneDX/specification/master/schema/bom-1.7.schema.json artifacts/cbom/cbom_*
+check-jsonschema --schemafile https://raw.githubusercontent.com/CycloneDX/specification/master/schema/bom-1.7.schema.json artifacts/cbom/cbom_*
 ```
 
 ### Running
