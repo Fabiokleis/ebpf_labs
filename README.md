@@ -50,7 +50,7 @@ SEC("tracepoint/syscalls/sys_enter_write")
 ```text
 [1. Kernel eBPF: sys_enter_write]
    Intercepts write() calls starting with 0x16 (TLS Handshake) and copies up to 4096 B.
-   (Continuation writes > 4 KB or encrypted 0x17 records are filtered in kernel space.)
+   (Writes without the 0x16 header, such as continuation writes or encrypted 0x17 records, are filtered in kernel space.)
           │
           ▼
 [2. Per-Socket Aggregator: (PID, FD)]
@@ -64,8 +64,8 @@ SEC("tracepoint/syscalls/sys_enter_write")
    - TLS 1.2 (cert < 4 KB): 1 write() -> 0x02 + 0x0B + 0x0C -> closes on 0x0E.
    - TLS 1.2 (cert > 4 KB):
        - write #1 (4096 B): ServerHello (0x02) + Certificate (0x0B, TRUNCATED).
-       - [intermediate Certificate writes without 0x16 header are dropped by eBPF]
-       - write #2 (~314 B): ServerKeyExchange (0x0C) + ServerHelloDone (0x0E).
+       - [rest of the Certificate in a write without 0x16 header, dropped by eBPF]
+       - next write (~314 B): ServerKeyExchange (0x0C) + ServerHelloDone (0x0E).
 ```
 
 ### Runtime CBOM Collector (`runtime_cbom`)

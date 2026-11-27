@@ -1,10 +1,10 @@
 {
   "bomFormat": "CycloneDX",
   "specVersion": "1.7",
-  "serialNumber": "urn:uuid:b68feb26-2bd9-40d0-b09c-db2506beb41a",
+  "serialNumber": "urn:uuid:fa007437-7b30-448a-a857-b148652d8054",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-11-25T02:21:15Z",
+    "timestamp": "2026-11-27T00:01:22Z",
     "component": {
       "type": "application",
       "name": "openssl"
@@ -12,7 +12,7 @@
   },
   "components": [
     {
-      "bom-ref": "tls-1.2-pid33565-fd4",
+      "bom-ref": "tls-1.2-pid28065-fd4",
       "type": "cryptographic-asset",
       "name": "TLS",
       "version": "1.2",
@@ -33,12 +33,27 @@
               ]
             }
           ],
-          "cryptoRefArray": [
-            "alg-aes-256-gcm",
-            "alg-sha-384",
-            "kex-x25519",
-            "sig-rsa_pss_rsae_sha256",
-            "cert-31cc381efd33"
+          "relatedCryptographicAssets": [
+            {
+              "type": "algorithm",
+              "ref": "alg-aes-256-gcm"
+            },
+            {
+              "type": "algorithm",
+              "ref": "alg-sha-384"
+            },
+            {
+              "type": "algorithm",
+              "ref": "kex-x25519"
+            },
+            {
+              "type": "algorithm",
+              "ref": "sig-rsa_pss_rsae_sha256"
+            },
+            {
+              "type": "certificate",
+              "ref": "cert-31cc381efd33"
+            }
           ]
         }
       },
@@ -65,7 +80,7 @@
         },
         {
           "name": "cbom:evidence:pid",
-          "value": "33565"
+          "value": "28065"
         },
         {
           "name": "cbom:evidence:fd",
@@ -130,7 +145,7 @@
         "assetType": "algorithm",
         "algorithmProperties": {
           "primitive": "key-agree",
-          "curve": "other/Curve25519"
+          "ellipticCurve": "other/Curve25519"
         }
       },
       "properties": [
@@ -194,9 +209,14 @@
           "issuerName": "CN=localhost",
           "notValidBefore": "2026-11-24T00:03:39Z",
           "notValidAfter": "2027-11-24T00:03:39Z",
-          "subjectPublicKeyRef": "pubkey-31cc381efd33",
           "certificateFormat": "X.509",
-          "certificateExtension": "der"
+          "certificateFileExtension": "der",
+          "relatedCryptographicAssets": [
+            {
+              "type": "publicKey",
+              "ref": "pubkey-31cc381efd33"
+            }
+          ]
         }
       },
       "properties": [

@@ -1,10 +1,10 @@
 {
   "bomFormat": "CycloneDX",
   "specVersion": "1.7",
-  "serialNumber": "urn:uuid:2cde6ff8-1904-445d-981b-3683cb633fb5",
+  "serialNumber": "urn:uuid:e6e33a5c-70db-4b97-95e2-374396ae19d1",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-11-25T02:21:18Z",
+    "timestamp": "2026-11-27T00:01:33Z",
     "component": {
       "type": "application",
       "name": "openssl"
@@ -12,7 +12,7 @@
   },
   "components": [
     {
-      "bom-ref": "tls-1.3-pid33565-fd4",
+      "bom-ref": "tls-1.3-pid28095-fd4",
       "type": "cryptographic-asset",
       "name": "TLS",
       "version": "1.3",
@@ -33,10 +33,19 @@
               ]
             }
           ],
-          "cryptoRefArray": [
-            "alg-aes-256-gcm",
-            "alg-sha-384",
-            "kex-x25519mlkem768"
+          "relatedCryptographicAssets": [
+            {
+              "type": "algorithm",
+              "ref": "alg-aes-256-gcm"
+            },
+            {
+              "type": "algorithm",
+              "ref": "alg-sha-384"
+            },
+            {
+              "type": "algorithm",
+              "ref": "kex-x25519mlkem768"
+            }
           ]
         }
       },
@@ -63,7 +72,7 @@
         },
         {
           "name": "cbom:evidence:pid",
-          "value": "33565"
+          "value": "28095"
         },
         {
           "name": "cbom:evidence:fd",
